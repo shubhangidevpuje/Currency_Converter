@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0">
+  <title>Currency Convertor</title>
+  <style type="text/css">
+    .container{
+      height: 100vh;
+      width: 100%;
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url("https://img.freepik.com/premium-vector/global-currency-background_115579-405.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    .currency-con{
+      height: 430px;
+      width: 650px;
+      box-shadow: 0px 0px 20px grey;
+      border-bottom-left-radius: 40px;
+      border-top-right-radius: 40px;
+      padding: 20px;
+      background: transparent;
+      backdrop-filter: blur(10px);
+    }
+    #amount{
+      margin-left: 32px;
+      width: 60%;
+      height: 27px;
+      border: none;
+      border-bottom: 2px solid black;
+    }
+    label{
+      font-size: 25px;
+      margin-left: 40px;
+      color: white;
+      font-weight: bolder;
+    }
+    select{
+      height: 30px;
+      width: 40%;
+      margin-left: 37px;
+    }
+    button[type="button"]{
+      height: 40px;
+      width: 90%;
+      margin-left: 5%;
+      border: none;
+      outline: none;
+      background-color: orangered;
+      border-radius: 10px;
+      color: white;
+      font-size: 20px;
+      font-weight: bolder;
+    }
+    #op{
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    img{
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="currency-con">
+      <h1 align="center" style="font-size: 27px; font-weight: bolder; color: white;">CURRENCY CONVERTOR</h1>
+      <center>
+        <img height="100px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFHnlbvPD_XK7ThDS52dn3i1NORyRdYG7oA3DvjiEL3n-V9SizreZ9XboOnjBOoduUiyo&usqp=CAU">
+      </center>
+      <div style="margin-top: 20px;">
+        <form>
+          <label style="font-weight: bolder;">AMOUNT :</label>
+          <input type="text" id="amount" placeholder="00">
+          <br>
+          <br>
+          <br>
+          <select id="from-currency"></select>
+          <select id="to-currency"></select>
+          <br>
+          <br>
+          <br>
+          <button type="button" onclick="convertCurrency()">CONVERT</button>
+          <h1 id="op" style="color: white; font-weight: bolder;"></h1>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    let api= "https://v6.exchangerate-api.com/v6/654c89b76f51c9f0cd3733f1/latest/USD";
+    let formCurrencyDropdown = document.getElementById("from-currency");
+    let toCurrencyDropdown = document.getElementById("to-currency");
+    let op = document.getElementById("op");
+    op.innerHTML= "output"
+    let currencyArr= ["AED","EUR","INR","LKR","PKR","USD"];
+
+
+
+    // Populate currency dropdowns
+    currencyArr.forEach(currency => {
+        let option1 = document.createElement("option");
+        option1.value = currency;
+        option1.textContent = currency;
+        formCurrencyDropdown.appendChild(option1);
+
+        let option2 = document.createElement("option");
+        option2.value = currency;
+        option2.textContent = currency;
+        toCurrencyDropdown.appendChild(option2);
+    });
+
+    formCurrencyDropdown.value= "INR";
+  toCurrencyDropdown.value= "USD";
+
+    // Function to convert currency
+    function convertCurrency() {
+        let amount = parseFloat(document.getElementById("amount").value);
+        let fromCurrency = formCurrencyDropdown.value;
+        let toCurrency = toCurrencyDropdown.value;
+
+        fetch(`https://v6.exchangerate-api.com/v6/654c89b76f51c9f0cd3733f1/latest/${fromCurrency}`)
+            .then(response => response.json())
+            .then(data => {
+                let conversionRate = data.conversion_rates[toCurrency];
+                let convertedAmount = amount * conversionRate;
+                op.innerHTML = `${fromCurrency} to ${toCurrency} is ${convertedAmount.toFixed(2)}`;
+            })
+    }
+  </script>
+</body>
+</html>
